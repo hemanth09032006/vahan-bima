@@ -1,15 +1,8 @@
-// ============================================================
-// Vahan Bima — script.js
-//
-// IMPORTANT: replace WHATSAPP_NUMBER below with Hemanth's actual
-// WhatsApp Business number in international format, no + or spaces.
-// Example: "919876543210" for an Indian number starting 98765 43210.
-// ============================================================
-const WHATSAPP_NUMBER = "917382795981"; // <-- REPLACE THIS
+const WHATSAPP_NUMBER = "917382795981"; // <-- REPLACE THIS with your real WhatsApp Business number
 
 function buildWhatsAppLink(message) {
   const encoded = encodeURIComponent(message);
-  return `https://wa.me/${WHATSAPP_NUMBER}?text=${encoded}`;
+  return "https://wa.me/" + WHATSAPP_NUMBER + "?text=" + encoded;
 }
 
 function openWhatsApp(message) {
@@ -24,33 +17,29 @@ function isValidEmail(value) {
   return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value.trim());
 }
 
-// ---------- Generic WhatsApp links (nav, footer, floating button) ----------
-document.querySelectorAll("[data-wa-generic]").forEach((el) => {
-  el.addEventListener("click", (e) => {
+document.querySelectorAll("[data-wa-generic]").forEach(function (el) {
+  el.addEventListener("click", function (e) {
     e.preventDefault();
-    openWhatsApp(
-      "Hi Vahan Bima, I'd like help with my vehicle insurance."
-    );
+    openWhatsApp("Hi Vahan Bima, I would like help with my vehicle insurance.");
   });
 });
 
-// ---------- Signature plate widget: quote / challan / renewal ----------
 const quickMobileEl = document.getElementById("quickMobile");
 const quickVehicleEl = document.getElementById("quickVehicle");
 const plateNote = document.getElementById("plateNote");
 
-quickMobileEl.addEventListener("input", () => {
+quickMobileEl.addEventListener("input", function () {
   quickMobileEl.value = quickMobileEl.value.replace(/\D/g, "").slice(0, 10);
 });
-quickVehicleEl.addEventListener("input", () => {
+quickVehicleEl.addEventListener("input", function () {
   quickVehicleEl.value = quickVehicleEl.value.toUpperCase();
 });
 
-document.querySelectorAll(".plate-btn").forEach((btn) => {
-  btn.addEventListener("click", () => {
+document.querySelectorAll(".plate-btn").forEach(function (btn) {
+  btn.addEventListener("click", function () {
     const mobile = quickMobileEl.value.trim();
     const vehicle = quickVehicleEl.value.trim();
-    const action = btn.dataset.action;
+    const action = btn.getAttribute("data-action");
 
     if (!isValidMobile(mobile)) {
       plateNote.textContent = "Please enter a valid 10-digit mobile number first.";
@@ -66,37 +55,37 @@ document.querySelectorAll(".plate-btn").forEach((btn) => {
     }
 
     plateNote.style.color = "";
-    plateNote.textContent = "We'll open WhatsApp with these details filled in — you just hit send.";
+    plateNote.textContent = "We will open WhatsApp with these details filled in - you just hit send.";
 
-    const reasonText = {
-      quote: `I'd like an insurance quote for my vehicle.`,
-      challan: `Please check challan status for my vehicle.`,
-      renewal: `Please check my insurance renewal / validity date.`,
-    }[action];
+    let reasonText = "";
+    if (action === "quote") {
+      reasonText = "I would like an insurance quote for my vehicle.";
+    } else if (action === "challan") {
+      reasonText = "Please check challan status for my vehicle.";
+    } else if (action === "renewal") {
+      reasonText = "Please check my insurance renewal or validity date.";
+    }
 
-    const message =
-      `Hi Vahan Bima,\n${reasonText}\n\n` +
-      `Mobile: ${mobile}\n` +
-      `Vehicle number: ${vehicle}`;
+    const message = "Hi Vahan Bima,\n" + reasonText + "\n\nMobile: " + mobile + "\nVehicle number: " + vehicle;
 
     openWhatsApp(message);
   });
 });
 
-// ---------- Pill selectors (vehicle type / policy type) ----------
 const pillState = {};
-document.querySelectorAll(".pill-group").forEach((group) => {
-  const name = group.dataset.name;
-  group.querySelectorAll(".pill").forEach((pill) => {
-    pill.addEventListener("click", () => {
-      group.querySelectorAll(".pill").forEach((p) => p.classList.remove("active"));
+document.querySelectorAll(".pill-group").forEach(function (group) {
+  const name = group.getAttribute("data-name");
+  group.querySelectorAll(".pill").forEach(function (pill) {
+    pill.addEventListener("click", function () {
+      group.querySelectorAll(".pill").forEach(function (p) {
+        p.classList.remove("active");
+      });
       pill.classList.add("active");
-      pillState[name] = pill.dataset.value;
+      pillState[name] = pill.getAttribute("data-value");
     });
   });
 });
 
-// ---------- Full quote form ----------
 const quoteForm = document.getElementById("quoteForm");
 const mobileInput = document.getElementById("mobile");
 const emailInput = document.getElementById("email");
@@ -105,14 +94,14 @@ const cityInput = document.getElementById("city");
 const mobileError = document.getElementById("mobileError");
 const emailError = document.getElementById("emailError");
 
-mobileInput.addEventListener("input", () => {
+mobileInput.addEventListener("input", function () {
   mobileInput.value = mobileInput.value.replace(/\D/g, "").slice(0, 10);
 });
-regInput.addEventListener("input", () => {
+regInput.addEventListener("input", function () {
   regInput.value = regInput.value.toUpperCase();
 });
 
-quoteForm.addEventListener("submit", (e) => {
+quoteForm.addEventListener("submit", function (e) {
   e.preventDefault();
   mobileError.textContent = "";
   emailError.textContent = "";
@@ -143,13 +132,13 @@ quoteForm.addEventListener("submit", (e) => {
   if (!valid) return;
 
   const message =
-    `Hi Vahan Bima, I'd like an insurance quote.\n\n` +
-    `Vehicle type: ${pillState.vehicleType}\n` +
-    `Policy type: ${pillState.policyType}\n` +
-    `Registration number: ${regInput.value.trim() || "Not provided"}\n` +
-    `City/District: ${cityInput.value.trim()}\n` +
-    `Mobile: ${mobileInput.value.trim()}\n` +
-    `Email: ${emailInput.value.trim()}`;
+    "Hi Vahan Bima, I would like an insurance quote.\n\n" +
+    "Vehicle type: " + pillState.vehicleType + "\n" +
+    "Policy type: " + pillState.policyType + "\n" +
+    "Registration number: " + (regInput.value.trim() || "Not provided") + "\n" +
+    "City/District: " + cityInput.value.trim() + "\n" +
+    "Mobile: " + mobileInput.value.trim() + "\n" +
+    "Email: " + emailInput.value.trim();
 
   openWhatsApp(message);
 });

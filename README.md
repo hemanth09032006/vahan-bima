@@ -20,10 +20,10 @@ const WHATSAPP_NUMBER = "91XXXXXXXXXX"; // <-- REPLACE THIS
 
 Replace it with Hemanth's **secondary WhatsApp Business number**, in international format with no `+`, spaces, or dashes.
 
-Example: if the number is `98765 43210`, write:
+Example: if the number is `98765 00000`, write:
 
 ```js
-const WHATSAPP_NUMBER = "919876543210";
+const WHATSAPP_NUMBER = "919876500000";
 ```
 
 That's the only code change required before going live.
